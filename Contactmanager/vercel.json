@@ -4,14 +4,8 @@
     {
       "src": "package.json",
       "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "config": { "distDir": "dist" }
     }
   ],
-  "scripts": {
-    "build": "npm run build"
-  },
-  "framework": "vite",
-  "outputDirectory": "dist"
+  "framework": "vite"
 }
