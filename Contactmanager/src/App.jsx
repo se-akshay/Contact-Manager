@@ -8,6 +8,7 @@ const API_URL = "https://contact-manager-seven-chi.vercel.app/api/contacts";
 function App() {
   const [contacts, setContacts] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchContacts();
@@ -15,6 +16,7 @@ function App() {
 
   const fetchContacts = async () => {
     try {
+      setLoading(true);
       const response = await fetch(API_URL);
       const data = await response.json();
       if (data.success) {
@@ -22,6 +24,8 @@ function App() {
       }
     } catch (error) {
       console.error("Error fetching contacts:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,7 +94,16 @@ function App() {
 
         <div className="grid md:grid-cols-2 gap-8">
           <ContactForm onSubmit={handleContactSubmit} />
-          <ContactList contacts={contacts} onDelete={handleDeleteContact} />
+          {loading ? (
+            <div className="bg-white rounded-lg shadow-md p-6 flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading contacts...</p>
+              </div>
+            </div>
+          ) : (
+            <ContactList contacts={contacts} onDelete={handleDeleteContact} />
+          )}
         </div>
       </div>
     </div>
