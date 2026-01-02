@@ -1,20 +1,21 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
+import "./App.css";
+
+const API_URL = "https://contact-manager-seven-chi.vercel.app/api/contacts";
 
 function App() {
   const [contacts, setContacts] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Fetch contacts on component mount
   useEffect(() => {
     fetchContacts();
   }, []);
 
   const fetchContacts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/contacts");
+      const response = await fetch(API_URL);
       const data = await response.json();
       if (data.success) {
         setContacts(data.data);
@@ -26,11 +27,9 @@ function App() {
 
   const handleContactSubmit = async (contactData) => {
     try {
-      const response = await fetch("http://localhost:5000/api/contacts", {
+      const response = await fetch(API_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(contactData),
       });
 
@@ -42,7 +41,7 @@ function App() {
         setTimeout(() => setShowSuccess(false), 3000);
         return true;
       } else {
-        alert(data.message || "Error creating contact");
+        alert(data.message || "Error submitting contact");
         return false;
       }
     } catch (error) {
@@ -55,12 +54,9 @@ function App() {
   const handleDeleteContact = async (id) => {
     if (window.confirm("Are you sure you want to delete this contact?")) {
       try {
-        const response = await fetch(
-          `http://localhost:5000/api/contacts/${id}`,
-          {
-            method: "DELETE",
-          }
-        );
+        const response = await fetch(`${API_URL}/${id}`, {
+          method: "DELETE",
+        });
 
         const data = await response.json();
 
@@ -77,7 +73,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <header className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
